@@ -3,8 +3,9 @@ import MOCK from "../assets/data/products.json";
 import Product from "./Product";
 import "./Product.css";
 
-const ProductList = () => {
+const ProductList = ({ updateCart }) => {
   const [list, setList] = useState(MOCK);
+  const [currentCart, setCurrentCart] = useState([]);
 
   const filterProducts = (selectedCategory) => {
     const sortedArray = MOCK.filter(
@@ -13,8 +14,14 @@ const ProductList = () => {
     setList(sortedArray);
   };
 
+  const addToCart = (selectedProduct) => {
+    currentCart.push(selectedProduct);
+    setCurrentCart(currentCart);
+    updateCart(currentCart);
+  };
+
   return (
-    <>
+    <div className="list">
       <div className="product-container">
         <h4>Filter By </h4>
         <div className="product-container">
@@ -28,10 +35,10 @@ const ProductList = () => {
       </div>
       <div className="product-container">
         {list.map((product) => (
-          <Product productData={product} id={21} name={"dsds"} />
+          <Product productData={product} addToCart={addToCart} />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

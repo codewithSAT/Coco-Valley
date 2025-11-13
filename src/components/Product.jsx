@@ -16,12 +16,11 @@ import "./Product.css";
 
 //  props destructuring : props{content,id,name}
 
-const Product = ({ productData }) => {
+const Product = ({ productData, addToCart }) => {
   //Object destructuring
-  const { name, price, brand, stock } = productData;
+  const { name, price, brand, stock, bought } = productData;
   const [showCounter, setShowCounter] = useState(false);
-  const [count, setCount] = useState(0);
-  const [currentStock, setCurrentStock] = useState(0);
+  const [count, setCount] = useState(bought);
 
   return (
     <div className="products">
@@ -29,24 +28,41 @@ const Product = ({ productData }) => {
       <div className="product-price">{"$" + price}</div>
       <div className="product-brand">{brand}</div>
 
-      {showCounter ? (
-        <>{counterChip(count, setCount, setShowCounter, stock)}</>
-      ) : (
+      {!showCounter ? (
         <button
           className="addButton"
           onClick={() => {
             setShowCounter(true);
             setCount(count + 1);
+            addToCart(productData);
           }}
         >
           Add
         </button>
+      ) : (
+        <>
+          {counterChip(
+            count,
+            setCount,
+            setShowCounter,
+            stock,
+            addToCart,
+            productData
+          )}
+        </>
       )}
     </div>
   );
 };
 
-const counterChip = (count, setCount, setShowCounter, stock) => (
+const counterChip = (
+  count,
+  setCount,
+  setShowCounter,
+  stock,
+  addToCart,
+  productData
+) => (
   <>
     <div className="counter">
       <button
@@ -61,7 +77,10 @@ const counterChip = (count, setCount, setShowCounter, stock) => (
       <button
         className="yukiButton"
         disabled={count == stock}
-        onClick={() => setCount(count + 1)}
+        onClick={() => {
+          setCount(count + 1);
+          addToCart(productData);
+        }}
       >
         +
       </button>
